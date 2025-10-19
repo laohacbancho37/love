@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💌 Chúc Mừng 20/10 - Lúm Yêu ❤️</title>
     <style>
+        @font-face {
+            font-family: 'Vujahday Script';
+            src: url('sources/font/Vujahday Script-regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -100,8 +107,8 @@
         /* Letter container */
         .letter-container {
             position: relative;
-            width: min(25rem, 90vw);
-            height: min(18.75rem, 60vw);
+            width: min(35rem, 95vw);
+            height: min(26rem, 70vw);
             margin: 0 auto;
             cursor: pointer;
             transition: transform 0.3s ease;
@@ -115,42 +122,25 @@
             cursor: default;
         }
 
-        /* Envelope - Fixed dimensions */
+        /* Envelope - Using real images */
         .envelope {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: white;
+            background-image: url('sources/images/letter_open.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
             border-radius: 0.625rem;
             box-shadow: 0 0.625rem 2.5rem rgba(0,0,0,0.3);
             transition: all 0.8s ease;
+            opacity: 1;
+            transform: scale(1);
         }
 
-        .envelope-flap {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 50% solid transparent;
-            border-right: 50% solid transparent;
-            border-bottom: 50% solid #f0f0f0;
-            top: 0;
-            left: 0;
-            transform-origin: top center;
-            transition: transform 0.8s ease;
-            z-index: 3;
-            will-change: transform;
-        }
-
-        .envelope-flap::before {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 12.5rem solid transparent;
-            border-right: 12.5rem solid transparent;
-            border-top: 9.375rem solid white;
-            top: -9.375rem;
-            left: -12.5rem;
+        .envelope.show {
+            opacity: 1;
+            transform: scale(1);
         }
 
         /* Heart seal */
@@ -159,7 +149,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(2.5rem, 8vw, 3.75rem);
+            font-size: clamp(3.5rem, 10vw, 5rem);
             z-index: 5;
             animation: pulse 1.5s infinite;
             filter: drop-shadow(0 0 0.625rem rgba(255,0,0,0.5));
@@ -176,24 +166,23 @@
             }
         }
 
-        /* Letter paper - Improved positioning */
+        /* Letter paper - Using real image */
         .letter-paper {
             position: fixed;
-            width: min(23.75rem, 90vw);
-            max-height: 70vh;
-            background: linear-gradient(to bottom, #fff5f5 0%, #ffffff 100%);
-            border-radius: 0.625rem;
-            padding: 1.875rem 1.5625rem;
-            box-shadow: 0 0.625rem 2.5rem rgba(0,0,0,0.3);
-            top: 50%;
+            width: min(45rem, 65vw);
+            height: min(75rem, 85vh);
+            background-image: url('sources/images/letter.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            top: 60%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.8);
             z-index: 2;
             opacity: 0;
             transition: all 0.8s ease;
-            overflow-y: auto;
-            border: 0.125rem solid rgba(255,192,203,0.3);
             pointer-events: none;
+            border-radius: 0.625rem;
         }
 
         /* Custom scrollbar */
@@ -216,33 +205,45 @@
         }
 
         .letter-content {
-            font-size: clamp(0.875rem, 2.5vw, 1rem);
-            line-height: 1.7;
+            font-family: 'Vujahday Script', cursive;
+            font-size: clamp(1.11rem, 2.77vw, 1.26rem);
+            line-height: 1.5;
             color: #333;
             text-align: left;
             opacity: 0;
-            position: relative;
+            position: absolute;
+            top: 25%;
+            left: 15%;
+            right: 15%;
+            bottom: 10%;
             z-index: 1;
+            overflow: hidden;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .letter-content p {
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.3rem;
             opacity: 0;
             animation: fadeIn 1s forwards;
             word-wrap: break-word;
+            flex-shrink: 0;
         }
 
-        .letter-content .line1 { animation-delay: 0.5s; }
-        .letter-content .line2 { animation-delay: 1s; }
-        .letter-content .line3 { animation-delay: 1.5s; }
-        .letter-content .line4 { animation-delay: 2s; }
-        .letter-content .line5 { animation-delay: 2.5s; }
+        .letter-content .line1 { animation-delay: 1.5s; }
+        .letter-content .line2 { animation-delay: 2s; }
+        .letter-content .line3 { animation-delay: 2.5s; }
+        .letter-content .line4 { animation-delay: 3s; }
+        .letter-content .line5 { animation-delay: 3.5s; }
         .letter-content .line6 { 
-            animation-delay: 3s;
-            text-align: right;
+            animation-delay: 4s;
+            text-align: left;
             font-style: italic;
             font-weight: bold;
             color: #c73866;
+            margin-left: 2rem;
         }
 
         @keyframes fadeIn {
@@ -251,28 +252,36 @@
             }
         }
 
-        /* Opened state - Fixed positioning */
-        .letter-container.opened .envelope-flap {
-            transform: rotateX(180deg);
-        }
-
+        /* Opened state - Animation sequence */
         .letter-container.opened .heart-seal {
             opacity: 0;
             transform: translate(-50%, -50%) scale(0);
         }
 
+        .letter-container.opened .envelope {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .letter-container.opened .envelope.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .letter-container.opened .envelope.hide {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
         .letter-container.opened .letter-paper {
             opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
             z-index: 1000;
             pointer-events: auto;
         }
 
         .letter-container.opened .letter-content {
             opacity: 1;
-        }
-        
-        .letter-container.opened .envelope {
-            z-index: 1;
         }
 
         /* Instruction text */
@@ -474,6 +483,119 @@
             }
         }
 
+        /* Show images animation */
+        .show-images-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .show-images-container.active {
+            opacity: 1;
+        }
+
+        .show-image {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            animation: floatAndRotate 8s infinite linear;
+        }
+
+        .show-image.pic1 { background-image: url('sources/images/show/pic1.png'); }
+        .show-image.pic2 { background-image: url('sources/images/show/pic2.png'); }
+        .show-image.pic3 { background-image: url('sources/images/show/pic3.png'); }
+        .show-image.pic4 { background-image: url('sources/images/show/pic4.png'); }
+        .show-image.pic5 { background-image: url('sources/images/show/pic5.png'); }
+        .show-image.pic6 { background-image: url('sources/images/show/pic6.png'); }
+        .show-image.pic7 { background-image: url('sources/images/show/pic7.png'); }
+        .show-image.pic8 { background-image: url('sources/images/show/pic8.png'); }
+        .show-image.pic9 { background-image: url('sources/images/show/pic9.png'); }
+        .show-image.pic10 { background-image: url('sources/images/show/pic10.png'); }
+        .show-image.pic11 { background-image: url('sources/images/show/pic11.png'); }
+        .show-image.pic12 { background-image: url('sources/images/show/pic12.png'); }
+        .show-image.pic13 { background-image: url('sources/images/show/pic13.png'); }
+        .show-image.pic14 { background-image: url('sources/images/show/pic14.png'); }
+        .show-image.pic15 { background-image: url('sources/images/show/pic15.png'); }
+        .show-image.pic16 { background-image: url('sources/images/show/pic16.png'); }
+        .show-image.pic17 { background-image: url('sources/images/show/pic17.png'); }
+        .show-image.pic18 { background-image: url('sources/images/show/pic18.png'); }
+
+        @keyframes floatAndRotate {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg) scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(0) rotate(720deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Random positions will be set by JavaScript */
+
+        /* Additional animation variants for different directions */
+        .show-image.pic1 { animation-name: floatAndRotate; }
+        .show-image.pic2 { animation-name: floatAndRotateReverse; }
+        .show-image.pic3 { animation-name: floatAndRotate; }
+        .show-image.pic4 { animation-name: floatAndRotateReverse; }
+        .show-image.pic5 { animation-name: floatAndRotate; }
+        .show-image.pic6 { animation-name: floatAndRotateReverse; }
+        .show-image.pic7 { animation-name: floatAndRotate; }
+
+        @keyframes floatAndRotateReverse {
+            0% {
+                transform: translateY(-100px) translateX(0) rotate(0deg) scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(0) rotate(-720deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Mouse hover heart falling effect */
+        .falling-heart {
+            position: fixed;
+            font-size: 1.5rem;
+            color: #ff6b9d;
+            pointer-events: none;
+            z-index: 2000;
+            animation: heartFall 2s ease-out forwards;
+        }
+
+        @keyframes heartFall {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100px) rotate(180deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
         /* Reduced motion for accessibility */
         @media (prefers-reduced-motion: reduce) {
             *,
@@ -491,13 +613,6 @@
                 padding: 3.125rem 0.625rem 5rem;
             }
             
-            .envelope-flap::before {
-                border-left: 8.75rem solid transparent;
-                border-right: 8.75rem solid transparent;
-                border-top: 6.5625rem solid white;
-                top: -6.5625rem;
-                left: -8.75rem;
-            }
             
             .music-control {
                 bottom: 1.25rem;
@@ -510,10 +625,10 @@
 <body>
     <!-- Start Screen -->
     <div class="start-screen" id="startScreen" role="dialog" aria-label="Màn hình khởi động">
-        <h1 class="start-title">💝 Lúm Yêu Dấu 💝</h1>
-        <p class="start-subtitle">🎵 Một tình yêu nhỏ xinh dành cho em 🎵</p>
-        <button class="start-button" aria-label="Bắt đầu xem thư">🎁 Nhấn để bắt đầu 🎁</button>
-        <p class="start-message">✨ Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 ✨</p>
+        <h1 class="start-title"> Bạn đã bị lừa đảo </h1>
+        <p class="start-subtitle">🎵 Có biết bật tiếng to to lên không? HẤY??? 🎵</p>
+        <button class="start-button" aria-label="Bắt đầu xem thư">🎁 Bấm zô đây thì bệnh chi 🎁</button>
+        <p class="start-message">✨ Cái đéo gì đây ✨</p>
     </div>
 
     <!-- Floating hearts background -->
@@ -526,22 +641,21 @@
 
     <!-- Main container -->
     <main class="container">
-        <h2 class="title">🌹 Chúc Mừng 20/10 - Lúm Yêu 🌹</h2>
+        <h2 class="title">💖 Chúc Mừng 20/10 vịu ơ của anh hihi 😚😍😘 </h2>
         
         <!-- Letter -->
         <article class="letter-container" id="letterContainer" role="button" aria-label="Nhấn để mở thư" tabindex="0">
-            <div class="envelope" aria-hidden="true">
-                <div class="envelope-flap"></div>
-            </div>
+            <div class="envelope" aria-hidden="true"></div>
             <div class="heart-seal" aria-hidden="true">❤️</div>
             <section class="letter-paper" aria-label="Nội dung thư">
                 <div class="letter-content" id="letterContent">
-                    <p class="line1">💌 <strong>Gửi Lúm yêu của anh,</strong></p>
-                    <p class="line2">🌸 Nhân ngày Phụ nữ Việt Nam 20/10, anh muốn gửi đến em những lời yêu thương chân thành nhất.</p>
-                    <p class="line3">💝 Em là ánh sáng trong cuộc đời anh, là lý do khiến mỗi ngày của anh thêm ý nghĩa. Em xinh đẹp, dịu dàng và đáng yêu đến mức anh không thể nào diễn tả hết bằng lời.</p>
-                    <p class="line4">🌹 Chúc em luôn tươi cười, luôn hạnh phúc và được yêu thương mỗi ngày. Anh sẽ luôn ở bên cạnh, che chở và yêu thương em trọn đời.</p>
-                    <p class="line5">💖 Em là tất cả của anh. Anh yêu em nhiều lắm!</p>
-                    <p class="line6">❤️ Yêu em mãi mãi, Lúm ơi! ❤️</p>
+                    <p class="line1">💌 <strong>Gửi Lúm ❤️ của anh,</strong></p>
+                    <p class="line2"> Nhân ngày Phụ nữ Việt Nam 20/10, anh trân trọng gửi đến em những lời chúc tốt đẹp cũng như những lời yêu thương từ tận đáy lòng ( Điều mà 364 ngày khác anh cũng thế) </p>
+                    <p class="line3"> Có thể đôi lúc làm em phải mệt mỏi và cảm thấy tổn thương nhưng thực anh yêu Hải rất nhiều... Em biết điều đó mà.</p>
+                    <p class="line4"> Anh có thể chưa được như em kỳ vọng nhưng anh sẽ trở thành người em mong muốn sớm nhất để em đỡ phải chịu ấm ức và thiệt thòi.</p>
+        <p class="line5"> Anh yêu em, chúc em có một ngày sẽ thật vui vẻ và hạnh phúc bên anh và cũng có những điều vui vẻ với gia đình đặc biệt là những người phụ nữ khác cạnh em. Yêu Hải nhiều ❤️</p>
+        <p class="line6"> Moazzzzz.... Cuối thư cho anh gửi lời cảm ơn đến người phụ nữ của đời anh, cảm ơn em vì ta đã đồng hành cùng nhau. Cố lên nha em ơi ❤️ </p> 
+    
                 </div>
             </section>
         </article>
@@ -552,11 +666,33 @@
     <!-- Music control -->
     <button class="music-control" id="musicControl" aria-label="Điều khiển nhạc">🎵 Nhạc</button>
 
+    <!-- Show images container -->
+    <div class="show-images-container" id="showImagesContainer">
+        <div class="show-image pic1"></div>
+        <div class="show-image pic2"></div>
+        <div class="show-image pic3"></div>
+        <div class="show-image pic4"></div>
+        <div class="show-image pic5"></div>
+        <div class="show-image pic6"></div>
+        <div class="show-image pic7"></div>
+        <div class="show-image pic8"></div>
+        <div class="show-image pic9"></div>
+        <div class="show-image pic10"></div>
+        <div class="show-image pic11"></div>
+        <div class="show-image pic12"></div>
+        <div class="show-image pic13"></div>
+        <div class="show-image pic14"></div>
+        <div class="show-image pic15"></div>
+        <div class="show-image pic16"></div>
+        <div class="show-image pic17"></div>
+        <div class="show-image pic18"></div>
+    </div>
+
     <!-- Audio -->
     <audio id="bgMusic" loop preload="auto">
-        <source src="sources/music.mp3" type="audio/mpeg">
-        <source src="sources/music.ogg" type="audio/ogg">
-        <source src="sources/music.wav" type="audio/wav">
+        <source src="sources/audio/music.mp3" type="audio/mpeg">
+        <source src="sources/audio/music.ogg" type="audio/ogg">
+        <source src="sources/audio/music.wav" type="audio/wav">
     </audio>
 
     <script>
@@ -575,8 +711,8 @@
                 heart.className = 'floating-heart';
                 heart.textContent = heartColors[Math.floor(Math.random() * heartColors.length)];
                 heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
-                heart.style.fontSize = (Math.random() * 1.25 + 1.25) + 'rem';
+                heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                heart.style.fontSize = (Math.random() * 2.25 + 2.25) + 'rem';
                 heartBg.appendChild(heart);
                 heartCount++;
                 
@@ -623,8 +759,48 @@
         function openLetter() {
             if (!isOpened) {
                 letterContainer.classList.add('opened');
+                const envelope = letterContainer.querySelector('.envelope');
                 instruction.classList.add('hidden');
                 isOpened = true;
+                
+                // Bao thư mở biến mất ngay lập tức
+                envelope.classList.add('hide');
+                
+                // Lá thư xuất hiện ngay lập tức với animation scale
+                const letterPaper = letterContainer.querySelector('.letter-paper');
+                letterPaper.style.opacity = '1';
+                letterPaper.style.transform = 'translate(-50%, -50%) scale(1)';
+                
+                // Chữ hiển thị bình thường
+                const letterContent = letterContainer.querySelector('.letter-content');
+                letterContent.style.opacity = '1';
+                
+                // Kích hoạt animation cho từng dòng chữ
+                const lines = letterContent.querySelectorAll('p');
+                lines.forEach((line, index) => {
+                    setTimeout(() => {
+                        line.style.animation = 'fadeIn 1s forwards';
+                    }, index * 500);
+                });
+                
+                // Kích hoạt animation các hình ảnh bay lung tung với vị trí random
+                const showImagesContainer = document.getElementById('showImagesContainer');
+                const showImages = showImagesContainer.querySelectorAll('.show-image');
+                
+                // Set random positions and animations for each image
+                showImages.forEach((image, index) => {
+                    const randomLeft = Math.random() * 80 + 10; // 10% to 90%
+                    const randomDelay = Math.random() * 2; // 0 to 2 seconds
+                    const randomDuration = Math.random() * 3 + 7; // 7 to 10 seconds
+                    const randomDirection = Math.random() > 0.5 ? 'floatAndRotate' : 'floatAndRotateReverse';
+                    
+                    image.style.left = randomLeft + '%';
+                    image.style.animationDelay = randomDelay + 's';
+                    image.style.animationDuration = randomDuration + 's';
+                    image.style.animationName = randomDirection;
+                });
+                
+                showImagesContainer.classList.add('active');
             }
         }
 
@@ -652,11 +828,31 @@
         // Initialize
         createFloatingHearts();
 
-        // Optimized sparkle effect
+        // Heart falling effect on mouse move
+        let lastHeart = 0;
+        const heartColors = ['❤️', '💕', '💖', '💗', '💝', '💞', '💓'];
+        
+        document.addEventListener('mousemove', function(e) {
+            const now = Date.now();
+            if (now - lastHeart > 150 && Math.random() > 0.7) {
+                lastHeart = now;
+                const fallingHeart = document.createElement('div');
+                fallingHeart.className = 'falling-heart';
+                fallingHeart.textContent = heartColors[Math.floor(Math.random() * heartColors.length)];
+                fallingHeart.style.left = e.clientX + 'px';
+                fallingHeart.style.top = e.clientY + 'px';
+                fallingHeart.setAttribute('aria-hidden', 'true');
+                document.body.appendChild(fallingHeart);
+                
+                setTimeout(() => fallingHeart.remove(), 2000);
+            }
+        });
+
+        // Optimized sparkle effect (reduced frequency to make room for hearts)
         let lastSparkle = 0;
         document.addEventListener('mousemove', function(e) {
             const now = Date.now();
-            if (now - lastSparkle > 100 && Math.random() > 0.95) {
+            if (now - lastSparkle > 300 && Math.random() > 0.98) {
                 lastSparkle = now;
                 const sparkle = document.createElement('div');
                 sparkle.textContent = '✨';
