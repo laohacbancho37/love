@@ -483,7 +483,7 @@
             }
         }
 
-        /* Show images animation */
+        /* Show images animation - Optimized for loading */
         .show-images-container {
             position: fixed;
             top: 0;
@@ -509,26 +509,14 @@
             background-position: center;
             opacity: 0;
             animation: floatAndRotate 8s infinite linear;
+            /* Lazy loading optimization */
+            background-image: none;
         }
 
-        .show-image.pic1 { background-image: url('sources/images/show/pic1.png'); }
-        .show-image.pic2 { background-image: url('sources/images/show/pic2.png'); }
-        .show-image.pic3 { background-image: url('sources/images/show/pic3.png'); }
-        .show-image.pic4 { background-image: url('sources/images/show/pic4.png'); }
-        .show-image.pic5 { background-image: url('sources/images/show/pic5.png'); }
-        .show-image.pic6 { background-image: url('sources/images/show/pic6.png'); }
-        .show-image.pic7 { background-image: url('sources/images/show/pic7.png'); }
-        .show-image.pic8 { background-image: url('sources/images/show/pic8.png'); }
-        .show-image.pic9 { background-image: url('sources/images/show/pic9.png'); }
-        .show-image.pic10 { background-image: url('sources/images/show/pic10.png'); }
-        .show-image.pic11 { background-image: url('sources/images/show/pic11.png'); }
-        .show-image.pic12 { background-image: url('sources/images/show/pic12.png'); }
-        .show-image.pic13 { background-image: url('sources/images/show/pic13.png'); }
-        .show-image.pic14 { background-image: url('sources/images/show/pic14.png'); }
-        .show-image.pic15 { background-image: url('sources/images/show/pic15.png'); }
-        .show-image.pic16 { background-image: url('sources/images/show/pic16.png'); }
-        .show-image.pic17 { background-image: url('sources/images/show/pic17.png'); }
-        .show-image.pic18 { background-image: url('sources/images/show/pic18.png'); }
+        /* Only load images when needed */
+        .show-image.loaded {
+            transition: background-image 0.3s ease;
+        }
 
         @keyframes floatAndRotate {
             0% {
@@ -610,14 +598,78 @@
         /* Mobile optimization */
         @media (max-width: 48rem) {
             .container {
-                padding: 3.125rem 0.625rem 5rem;
+                padding: 2rem 0.5rem 4rem;
             }
             
+            .title {
+                font-size: clamp(1.2rem, 4vw, 1.8rem);
+                margin-bottom: 1.5rem;
+                padding: 0 0.5rem;
+            }
+            
+            .letter-container {
+                width: min(28rem, 95vw);
+                height: min(20rem, 65vh);
+            }
+            
+            .letter-paper {
+                width: min(28rem, 95vw);
+                height: min(20rem, 65vh);
+                top: 65%;
+            }
+            
+            .letter-content {
+                font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+                top: 22%;
+                left: 18%;
+                right: 18%;
+                bottom: 15%;
+                padding: 0.5rem;
+                line-height: 1.4;
+            }
+            
+            .letter-content p {
+                margin-bottom: 0.25rem;
+            }
+            
+            .heart-seal {
+                font-size: clamp(2.5rem, 8vw, 3.5rem);
+            }
+            
+            .instruction {
+                font-size: clamp(0.8rem, 2.5vw, 1rem);
+                margin-top: 1rem;
+            }
             
             .music-control {
-                bottom: 1.25rem;
-                right: 1.25rem;
-                padding: 0.75rem 1rem;
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.5rem 0.75rem;
+                font-size: clamp(0.7rem, 2vw, 0.9rem);
+            }
+            
+            .show-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .falling-heart {
+                font-size: 1.2rem;
+            }
+            
+            .start-title {
+                font-size: clamp(1.5rem, 5vw, 2.2rem);
+                margin-bottom: 1.25rem;
+            }
+            
+            .start-subtitle {
+                font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+                margin-bottom: 2rem;
+            }
+            
+            .start-button {
+                padding: clamp(1rem, 3vw, 1.25rem) clamp(2rem, 6vw, 2.5rem);
+                font-size: clamp(1rem, 3vw, 1.25rem);
             }
         }
     </style>
@@ -783,9 +835,19 @@
                     }, index * 500);
                 });
                 
-                // Kích hoạt animation các hình ảnh bay lung tung với vị trí random
+                // Kích hoạt animation các hình ảnh bay lung tung với lazy loading
                 const showImagesContainer = document.getElementById('showImagesContainer');
                 const showImages = showImagesContainer.querySelectorAll('.show-image');
+                
+                // Lazy load images only when letter is opened
+                const imageUrls = [
+                    'sources/images/show/pic1.png', 'sources/images/show/pic2.png', 'sources/images/show/pic3.png',
+                    'sources/images/show/pic4.png', 'sources/images/show/pic5.png', 'sources/images/show/pic6.png',
+                    'sources/images/show/pic7.png', 'sources/images/show/pic8.png', 'sources/images/show/pic9.png',
+                    'sources/images/show/pic10.png', 'sources/images/show/pic11.png', 'sources/images/show/pic12.png',
+                    'sources/images/show/pic13.png', 'sources/images/show/pic14.png', 'sources/images/show/pic15.png',
+                    'sources/images/show/pic16.png', 'sources/images/show/pic17.png', 'sources/images/show/pic18.png'
+                ];
                 
                 // Set random positions and animations for each image
                 showImages.forEach((image, index) => {
@@ -798,6 +860,16 @@
                     image.style.animationDelay = randomDelay + 's';
                     image.style.animationDuration = randomDuration + 's';
                     image.style.animationName = randomDirection;
+                    
+                    // Lazy load image
+                    if (imageUrls[index]) {
+                        const img = new Image();
+                        img.onload = () => {
+                            image.style.backgroundImage = `url(${imageUrls[index]})`;
+                            image.classList.add('loaded');
+                        };
+                        img.src = imageUrls[index];
+                    }
                 });
                 
                 showImagesContainer.classList.add('active');
